@@ -1,13 +1,13 @@
 const { Devices } = require('../models');
 const { Experiments } = require('../models');
 class DeviceController {
-    async sendData (req, res) {
+    async sendData(req, res) {
         try {
             const checkDeviceToken = await Devices.findOne({
-                where: {uuid: req.headers['device-token']}
+                where: { uuid: req.headers['device-token'] }
             })
 
-            if(checkDeviceToken) {
+            if (checkDeviceToken) {
                 const oldDevice = await Devices.create({
                     uuid: req.headers['device-token'],
                     experimentId: checkDeviceToken.experimentId,
@@ -20,28 +20,28 @@ class DeviceController {
                         id: oldDevice.experimentId
                     }
                 })
-                res.json({oldDevice, experimentValue: findExperimentKey.value});
+                res.json({ oldDevice, experimentValue: findExperimentKey.value });
             }
             else {
-            const devicesCount = await Devices.count({
-                where: {
+                const devicesCount = await Devices.count({
+                    where: {
+                        newdevice: true
+                    }
+                });
+                const experimentId = (devicesCount % 3) + 1;
+                const newDevice = await Devices.create({
+                    uuid: req.headers['device-token'],
+                    experimentId: experimentId,
                     newdevice: true
-                }
-            });
-            const experimentId = (devicesCount%3)+1;
-            const newDevice = await Devices.create({
-                uuid: req.headers['device-token'],
-                experimentId: experimentId,
-                newdevice: true
-            })
-            await newDevice.save();
-            const findExperimentKey = await Experiments.findOne({
-                where: {
-                    id: newDevice.experimentId
-                }
-            })
-            res.json({newDevice, experimentValue: findExperimentKey.value});
-        }
+                })
+                await newDevice.save();
+                const findExperimentKey = await Experiments.findOne({
+                    where: {
+                        id: newDevice.experimentId
+                    }
+                })
+                res.json({ newDevice, experimentValue: findExperimentKey.value });
+            }
         }
         catch (e) {
             console.log(e);
