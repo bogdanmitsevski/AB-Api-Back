@@ -1,28 +1,27 @@
-const { Experiments } = require('../models');
-const { Devices } = require('../models');
+const db = require('../models');
 class DataController {
     async getData(req, res) {
         try {
-            const allExperiments = await Experiments.findAll();
-            const totalDevicesByGroupA = await Devices.count({
+            const allExperiments = await db.experiments.findAll();
+            const totalDevicesByGroupA = await db.devices.count({
                 where: {
                     experimentId: 1,
                     newdevice: true
                 }
             })
-            const totalDevicesByGroupB = await Devices.count({
+            const totalDevicesByGroupB = await db.devices.count({
                 where: {
                     experimentId: 2,
                     newdevice: true
                 }
             })
-            const totalDevicesByGroupC = await Devices.count({
+            const totalDevicesByGroupC = await db.devices.count({
                 where: {
                     experimentId: 3,
                     newdevice: true
                 }
             })
-            const totalNewDevices = await Devices.count({
+            const totalNewDevices = await db.devices.count({
                 where: { newdevice: true }
             })
             res.json({ totalDevicesByGroupA, totalDevicesByGroupB, totalDevicesByGroupC, allExperiments, totalNewDevices });
