@@ -16,10 +16,6 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false
       },
-      newdevice: {
-        type: Sequelize.BOOLEAN,
-        allowNull: false
-      },
       createdAt: {
         allowNull: false,
         type: DataTypes.DATE

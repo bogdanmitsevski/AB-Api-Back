@@ -6,24 +6,19 @@ class DataController {
             const totalDevicesByGroupA = await db.devices.count({
                 where: {
                     experimentId: 1,
-                    newdevice: true
                 }
             })
             const totalDevicesByGroupB = await db.devices.count({
                 where: {
                     experimentId: 2,
-                    newdevice: true
                 }
             })
             const totalDevicesByGroupC = await db.devices.count({
                 where: {
                     experimentId: 3,
-                    newdevice: true
                 }
             })
-            const totalNewDevices = await db.devices.count({
-                where: { newdevice: true }
-            })
+            const totalNewDevices = await db.devices.count();
             res.json({ totalDevicesByGroupA, totalDevicesByGroupB, totalDevicesByGroupC, allExperiments, totalNewDevices });
         }
         catch (e) {

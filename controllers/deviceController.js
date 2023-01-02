@@ -2,19 +2,17 @@ const db = require('../models')
 class DeviceController {
     async sendData(req, res) {
         try {
-            const checkDeviceToken = await db.devices.findOne({
+            const currentDevice = await db.devices.findOne({
                 where: { uuid: req.headers['device-token'] }
             })
-            console.log(req.headers['device-token']);
 
-            if (checkDeviceToken) {
+            if (currentDevice) {
                 const findExperimentKey = await db.experiments.findOne({
                     where: {
-                        id: checkDeviceToken.experimentId
+                        id: currentDevice.experimentId
                     }
                 })
-                res.json({ experimentValue: findExperimentKey.value, token: req.headers['device-token'] });
-                console.log({ experimentValue: findExperimentKey.value });
+                res.json({ device: currentDevice,  experimentValue: findExperimentKey.value});
             }
             else {
                 const devicesCount = await db.devices.count();
@@ -30,7 +28,7 @@ class DeviceController {
                         id: newDevice.experimentId
                     }
                 })
-                res.json({ newDevice, experimentValue: findExperimentKey.value });
+                res.json({ device: newDevice, experimentValue: findExperimentKey.value });
             }
         }
         catch (e) {

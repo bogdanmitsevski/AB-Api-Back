@@ -9,8 +9,7 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   devices.init({
-    uuid: { type: DataTypes.STRING, allowNull: false },
-    newdevice: { type: DataTypes.BOOLEAN, allowNull: false }
+    uuid: { type: DataTypes.STRING, allowNull: false }
   }, {
     sequelize,
     tableName: 'devices',
