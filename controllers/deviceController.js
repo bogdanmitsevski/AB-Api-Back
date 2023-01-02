@@ -5,28 +5,19 @@ class DeviceController {
             const checkDeviceToken = await db.devices.findOne({
                 where: { uuid: req.headers['device-token'] }
             })
+            console.log(req.headers['device-token']);
 
             if (checkDeviceToken) {
-                const oldDevice = await db.devices.create({
-                    uuid: req.headers['device-token'],
-                    experimentId: checkDeviceToken.experimentId,
-                    newdevice: false
-
-                })
-                await oldDevice.save();
                 const findExperimentKey = await db.experiments.findOne({
                     where: {
-                        id: oldDevice.experimentId
+                        id: checkDeviceToken.experimentId
                     }
                 })
-                res.json({ oldDevice, experimentValue: findExperimentKey.value });
+                res.json({ experimentValue: findExperimentKey.value, token: req.headers['device-token'] });
+                console.log({ experimentValue: findExperimentKey.value });
             }
             else {
-                const devicesCount = await db.devices.count({
-                    where: {
-                        newdevice: true
-                    }
-                });
+                const devicesCount = await db.devices.count();
                 const experimentId = (devicesCount % 3) + 1;
                 const newDevice = await db.devices.create({
                     uuid: req.headers['device-token'],

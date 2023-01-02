@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const DeviceController = require('../controllers/deviceController');
 
-router.post('/send', DeviceController.sendData);
+router.post('/', DeviceController.sendData);
 
 
 
